@@ -4,10 +4,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +33,6 @@ public class Product {
     @JoinColumn(name = "category_id")
     @Getter @Setter
     private Category category;
-
-    public Product() {
-    }
 
     public Product(String name, String description, BigDecimal price, Long quantity, LocalDate createdAt,
             Category category) {

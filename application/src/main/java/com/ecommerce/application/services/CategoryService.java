@@ -4,16 +4,14 @@ import com.ecommerce.application.DTOs.CategoryDTO;
 import com.ecommerce.application.entities.Category;
 import com.ecommerce.application.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CategoryService {
    private final CategoryRepository categoryRepository;
-   public CategoryService(CategoryRepository categoryRepository) {
-      this.categoryRepository = categoryRepository;
-   }
 
    @Transactional
    public List<CategoryDTO> findAll() {

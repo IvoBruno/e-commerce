@@ -3,10 +3,16 @@ package com.ecommerce.application.entities;
 import java.math.BigDecimal;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +30,6 @@ public class ProductOrder {
     private Integer quantity;
     @Getter @Setter
     private BigDecimal unityPrice;
-
-    public ProductOrder() {
-    }
 
     public ProductOrder(Product product, Order order, Integer quantity, BigDecimal unityPrice) {
         this.product = product;

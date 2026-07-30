@@ -4,16 +4,14 @@ import com.ecommerce.application.DTOs.PaymentDTO;
 import com.ecommerce.application.entities.Payment;
 import com.ecommerce.application.repositories.PaymentRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class PaymentService {
    private final PaymentRepository paymentRepository;
-   public PaymentService(PaymentRepository paymentRepository) {
-      this.paymentRepository = paymentRepository;
-   }
 
    @Transactional
    public List<PaymentDTO> findAll() {

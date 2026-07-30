@@ -4,17 +4,14 @@ import com.ecommerce.application.DTOs.OrderDTO;
 import com.ecommerce.application.entities.Order;
 import com.ecommerce.application.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class OrderService {
    private final OrderRepository orderRepository;
-
-   public OrderService(OrderRepository orderRepository) {
-      this.orderRepository = orderRepository;
-   }
 
    @Transactional
    public List<OrderDTO> findAll() {

@@ -4,10 +4,16 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +33,6 @@ public class Order {
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     @Getter @Setter
     private Payment payment;
-
-    public Order() {
-    }
 
     public Order(User user, BigDecimal totalAmount, LocalDateTime createdAt, String status, Payment payment) {
         this.user = user;

@@ -1,22 +1,18 @@
 package com.ecommerce.application.services;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.ecommerce.application.DTOs.UserDTO;
 import com.ecommerce.application.entities.User;
 import com.ecommerce.application.repositories.UserRepository;
-
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    
+
     @Transactional
     public List<UserDTO> findAll() {
         return userRepository
@@ -32,17 +28,27 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO save(User user) {
-        return new UserDTO(userRepository.save(user));
+    public UserDTO save(UserDTO user) {
+        return new UserDTO(userRepository.save(User.builder()
+                .name(user.name())
+                .email(user.email())
+                .password(user.password())
+                .cpf(user.cpf())
+                .build()));
     }
 
     @Transactional
-    public UserDTO update(User user) {
-        return new UserDTO(userRepository.save(user));
+    public UserDTO update(UserDTO user) {
+        return new UserDTO(userRepository.save(User.builder()
+                .name(user.name())
+                .email(user.email())
+                .password(user.password())
+                .cpf(user.cpf())
+                .build()));
     }
 
     @Transactional
-    public void delete(User user) {
-        userRepository.delete(user);
+    public void delete(UserDTO user) {
+        userRepository.deleteById(user.id());
     }
 }

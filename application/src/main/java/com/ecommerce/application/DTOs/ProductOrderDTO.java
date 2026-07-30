@@ -8,7 +8,7 @@ public record ProductOrderDTO(
         Long id,
         Long product_id,
         Long order_id,
-        int quantity,
+        Integer quantity,
         BigDecimal unity_price
 ) {
    public ProductOrderDTO(ProductOrder entity){
