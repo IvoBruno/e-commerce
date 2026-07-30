@@ -2,8 +2,6 @@ package com.ecommerce.application.DTOs;
 
 import com.ecommerce.application.entities.User;
 
-import java.io.Serializable;
-
 public record UserDTO(
         Long id,
         String name,

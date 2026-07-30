@@ -3,13 +3,7 @@ package com.ecommerce.application.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +13,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     @Getter
     private User user;
@@ -29,7 +23,7 @@ public class Order {
     private LocalDateTime createdAt;
     @Getter @Setter
     private String status;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     @Getter @Setter
     private Payment payment;
@@ -44,6 +38,7 @@ public class Order {
         this.status = status;
         this.payment = payment;
     }
+
 
     @Override
     public int hashCode() {
