@@ -15,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    private String id;
+    private Long id;
     @Getter @Setter
     private String name;
     @Getter @Setter
@@ -56,11 +56,8 @@ public class User {
             return false;
         User other = (User) obj;
         if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+           return other.id == null;
+        } else return id.equals(other.id);
     }
 
     @Override

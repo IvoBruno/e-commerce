@@ -15,6 +15,7 @@ import lombok.Setter;
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id")
@@ -57,11 +58,8 @@ public class ProductOrder {
             return false;
         ProductOrder other = (ProductOrder) obj;
         if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+           return other.id == null;
+        } else return id.equals(other.id);
     }
 
     @Override
