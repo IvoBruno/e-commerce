@@ -1,5 +1,6 @@
 package com.ecommerce.application.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.ecommerce.application.DTOs.UserDTO;
@@ -34,21 +35,21 @@ public class UserService {
                 .email(user.email())
                 .password(user.password())
                 .cpf(user.cpf())
+                .createdAt(LocalDateTime.now())
                 .build()));
     }
 
     @Transactional
-    public UserDTO update(UserDTO user) {
-        return new UserDTO(userRepository.save(User.builder()
-                .name(user.name())
-                .email(user.email())
-                .password(user.password())
-                .cpf(user.cpf())
-                .build()));
+    public UserDTO update(Long id, UserDTO user) {
+        User existingUser = userRepository.getReferenceById(id);
+        existingUser.setName(user.name());
+        existingUser.setEmail(user.email());
+        existingUser.setPassword(user.password());
+        return new UserDTO(userRepository.save(existingUser));
     }
 
     @Transactional
-    public void delete(UserDTO user) {
-        userRepository.deleteById(user.id());
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 }

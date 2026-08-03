@@ -27,13 +27,20 @@ public class CategoryService {
    }
 
    @Transactional
-   public CategoryDTO create(Category category) {
-      return new CategoryDTO(categoryRepository.save(category));
+   public CategoryDTO create(CategoryDTO category) {
+      return new CategoryDTO(categoryRepository.save(Category.builder()
+              .name(category.name())
+              .description(category.description())
+              .build()));
    }
 
    @Transactional
-   public CategoryDTO update(Category category) {
-      return new CategoryDTO(categoryRepository.save(category));
+   public CategoryDTO update(Long id, CategoryDTO category) {
+      Category obj = categoryRepository.getReferenceById(id);
+      obj.setName(category.name());
+      obj.setDescription(category.description());
+      Category objUpdated = categoryRepository.save(obj);
+      return new CategoryDTO(objUpdated);
    }
 
    @Transactional

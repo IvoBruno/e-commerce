@@ -6,13 +6,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +29,9 @@ public class ProductOrder {
     @Getter @Setter
     private BigDecimal unityPrice;
 
+    public ProductOrder() {
+    }
+
     public ProductOrder(Product product, Order order, Integer quantity, BigDecimal unityPrice) {
         this.product = product;
         this.order = order;
@@ -38,7 +39,7 @@ public class ProductOrder {
         this.unityPrice = unityPrice;
     }
 
-    @Override
+   @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

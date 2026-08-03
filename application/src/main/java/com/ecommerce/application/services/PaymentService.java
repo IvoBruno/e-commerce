@@ -28,17 +28,25 @@ public class PaymentService {
    }
 
    @Transactional
-   public PaymentDTO save(Payment payment) {
-      return new PaymentDTO(paymentRepository.save(payment));
+   public PaymentDTO save(PaymentDTO payment) {
+      return new PaymentDTO(paymentRepository.save(Payment.builder()
+              .paymentMethod(payment.paymentMethod())
+              .amount(payment.amount())
+              .status(payment.status())
+              .createdAt(payment.createdAt())
+              .build()));
    }
 
    @Transactional
-   public PaymentDTO update(Payment payment) {
-      return new PaymentDTO(paymentRepository.save(payment));
+   public PaymentDTO update(Long id, PaymentDTO payment) {
+      Payment existingPayment = paymentRepository.getReferenceById(id);
+      existingPayment.setStatus(payment.status());
+      existingPayment.setPaymentMethod(payment.paymentMethod());
+      return new PaymentDTO(paymentRepository.save(existingPayment));
    }
 
    @Transactional
-   public void delete(Payment payment) {
-      paymentRepository.delete(payment);
+   public void delete(Long id) {
+      paymentRepository.deleteById(id);
    }
 }

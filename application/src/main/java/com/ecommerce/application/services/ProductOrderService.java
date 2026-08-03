@@ -2,6 +2,7 @@ package com.ecommerce.application.services;
 
 import com.ecommerce.application.DTOs.ProductOrderDTO;
 import com.ecommerce.application.entities.ProductOrder;
+import com.ecommerce.application.exceptions.ResourceNotFoundException;
 import com.ecommerce.application.repositories.OrderRepository;
 import com.ecommerce.application.repositories.ProductRepository;
 import com.ecommerce.application.repositories.ProductOrderRepository;
@@ -35,16 +36,21 @@ public class ProductOrderService {
    @Transactional
    public ProductOrderDTO save(ProductOrderDTO productOrder) {
       return new ProductOrderDTO(productOrderRepository.save(ProductOrder.builder()
-              .product(productRepository.findById(productOrder.product_id()).get())
-              .order(orderRepository.findById(productOrder.order_id()).get())
+              .product(productRepository.findById(productOrder.product_id()).orElseThrow(()-> new ResourceNotFoundException("Product not found")))
+              .order(orderRepository.findById(productOrder.order_id()).orElseThrow(() -> new ResourceNotFoundException("Order not found")))
               .quantity(productOrder.quantity())
               .unityPrice(productOrder.unity_price())
               .build()));
    }
 
    @Transactional
-   public ProductOrderDTO update (ProductOrder productOrder) {
-      return new ProductOrderDTO(productOrderRepository.save(productOrder));
+   public ProductOrderDTO update (Long id, ProductOrderDTO productOrder) {
+      ProductOrder existingProductOrder = productOrderRepository.getReferenceById(id);
+      existingProductOrder.setProduct(productRepository.findById(productOrder.product_id()).orElseThrow(()-> new ResourceNotFoundException("Product not found")));
+      existingProductOrder.setOrder(orderRepository.findById(productOrder.order_id()).orElseThrow(() -> new ResourceNotFoundException("Order not found")));
+      existingProductOrder.setQuantity(productOrder.quantity());
+      existingProductOrder.setUnityPrice(productOrder.unity_price());
+      return new ProductOrderDTO(productOrderRepository.save(existingProductOrder));
    }
 
    @Transactional

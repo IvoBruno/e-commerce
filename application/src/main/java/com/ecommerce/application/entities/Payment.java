@@ -22,7 +22,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
-    @Getter
+    @Getter @Setter
     private String paymentMethod;
     @Getter 
     private BigDecimal amount;
