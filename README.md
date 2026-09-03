@@ -229,6 +229,7 @@ cd application
 ### Related Documentation
 
 - `HEXAGONAL-ARCHITECTURE-ANALYSIS.md`: In-depth comparison between the original layered architecture and the target hexagonal design.
+- `RUN-AND-TROUBLESHOOTING.md`: Step-by-step instructions to run, test, and troubleshoot common runtime, build, and IDE issues.
 - `ROADMAP-E-COMMERCE.md`: Multi-phase development roadmap (security, authentication, checkout workflow, frontend storefront).
 
 ---
@@ -458,4 +459,5 @@ cd application
 ### Documentações Relacionadas
 
 - `HEXAGONAL-ARCHITECTURE-ANALYSIS.md`: Análise comparativa aprofundada entre a arquitetura em camadas anterior e a arquitetura hexagonal adotada.
+- `RUN-AND-TROUBLESHOOTING.md`: Passo a passo para execução, testes e resolução dos erros mais comuns de runtime, build e IDE.
 - `ROADMAP-E-COMMERCE.md`: Roadmap de evolução do sistema (segurança, JWT, checkout transacional e frontend).

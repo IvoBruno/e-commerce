@@ -28,11 +28,19 @@ public class Order {
 
   public void calculateTotal() {
     if (items == null || items.isEmpty()) {
+      this.totalAmount = BigDecimal.ZERO;
       return;
     }
-    this.totalAmount = items.stream()
-        .map(ProductOrder::calculateSubtotal)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal total = BigDecimal.ZERO;
+    for (ProductOrder item : items) {
+      if (item != null) {
+        BigDecimal subtotal = item.calculateSubtotal();
+        if (subtotal != null) {
+          total = total.add(subtotal);
+        }
+      }
+    }
+    this.totalAmount = total;
   }
 
   public void markAsPaid() {
