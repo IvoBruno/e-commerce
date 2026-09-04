@@ -1,6 +1,10 @@
 package com.ecommerce.infrastructure.adapters.output.persistence.entity;
 
+import com.ecommerce.domain.model.UserRole;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +32,10 @@ public class UserJpaEntity {
   private String email;
   private String password;
   private String cpf;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false, length = 50)
+  private UserRole role;
+
   private LocalDateTime createdAt;
 }
-

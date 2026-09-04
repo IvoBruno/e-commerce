@@ -18,6 +18,6 @@ public class User {
   private String email;
   private String password;
   private String cpf;
+  private UserRole role;
   private LocalDateTime createdAt;
 }
-

@@ -1,6 +1,7 @@
 package com.ecommerce.infrastructure.adapters.input.rest.dto;
 
 import com.ecommerce.domain.model.User;
+import com.ecommerce.domain.model.UserRole;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,8 +27,14 @@ public record UserDTO(
         regexp = "(^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$)|(^\\d{11}$)",
         message = "Invalid CPF format (expected 11 digits or 000.000.000-00)"
     )
-    String cpf
+    String cpf,
+
+    UserRole role
 ) {
+  public UserDTO(Long id, String name, String email, String password, String cpf) {
+    this(id, name, email, password, cpf, UserRole.ROLE_CLIENT);
+  }
+
   public static UserDTO fromDomain(User user) {
     if (user == null) {
       return null;
@@ -37,7 +44,8 @@ public record UserDTO(
         user.getName(),
         user.getEmail(),
         null, // Never expose password in responses
-        user.getCpf()
+        user.getCpf(),
+        user.getRole() != null ? user.getRole() : UserRole.ROLE_CLIENT
     );
   }
 
@@ -48,6 +56,7 @@ public record UserDTO(
         .email(email)
         .password(password)
         .cpf(cpf)
+        .role(role != null ? role : UserRole.ROLE_CLIENT)
         .build();
   }
 }

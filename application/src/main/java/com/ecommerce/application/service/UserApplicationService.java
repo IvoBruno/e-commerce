@@ -1,10 +1,12 @@
 package com.ecommerce.application.service;
 
 import com.ecommerce.application.ports.input.UserUseCase;
+import com.ecommerce.application.ports.output.PasswordEncoderPort;
 import com.ecommerce.application.ports.output.UserRepositoryPort;
 import com.ecommerce.domain.exception.ResourceNotFoundException;
 import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.domain.model.User;
+import com.ecommerce.domain.model.UserRole;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserApplicationService implements UserUseCase {
   private final UserRepositoryPort userRepositoryPort;
+  private final PasswordEncoderPort passwordEncoderPort;
 
   @Override
   @Transactional(readOnly = true)
@@ -44,6 +47,12 @@ public class UserApplicationService implements UserUseCase {
 
   @Override
   public User save(User user) {
+    if (user.getPassword() != null && !user.getPassword().isBlank()) {
+      user.setPassword(passwordEncoderPort.encode(user.getPassword()));
+    }
+    if (user.getRole() == null) {
+      user.setRole(UserRole.ROLE_CLIENT);
+    }
     if (user.getCreatedAt() == null) {
       user.setCreatedAt(LocalDateTime.now());
     }
@@ -55,7 +64,12 @@ public class UserApplicationService implements UserUseCase {
     User existing = findById(id);
     existing.setName(user.getName());
     existing.setEmail(user.getEmail());
-    existing.setPassword(user.getPassword());
+    if (user.getPassword() != null && !user.getPassword().isBlank()) {
+      existing.setPassword(passwordEncoderPort.encode(user.getPassword()));
+    }
+    if (user.getRole() != null) {
+      existing.setRole(user.getRole());
+    }
     existing.setCpf(user.getCpf());
     return userRepositoryPort.save(existing);
   }

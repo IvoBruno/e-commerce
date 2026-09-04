@@ -54,6 +54,19 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
+  @DisplayName("Should return 401 ProblemDetail for BadCredentialsException")
+  void shouldHandleBadCredentialsException() {
+    org.springframework.security.authentication.BadCredentialsException ex =
+        new org.springframework.security.authentication.BadCredentialsException("Invalid email or password");
+    ProblemDetail problem = exceptionHandler.handleBadCredentials(ex);
+
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), problem.getStatus());
+    assertEquals("Authentication Failed", problem.getTitle());
+    assertEquals("Invalid email or password", problem.getDetail());
+    assertNotNull(problem.getProperties().get("timestamp"));
+  }
+
+  @Test
   @DisplayName("Should return 400 ProblemDetail for DomainException")
   void shouldHandleDomainException() {
     DomainException ex = new DomainException("Order is already cancelled");
