@@ -74,5 +74,22 @@ class OrderApplicationServiceTest {
 
     assertThrows(ResourceNotFoundException.class, () -> orderApplicationService.create(inputOrder));
   }
+
+  @Test
+  @DisplayName("Should find orders with filters and pagination")
+  void shouldFindOrdersWithFilters() {
+    com.ecommerce.domain.model.PageResult<Order> mockPage = com.ecommerce.domain.model.PageResult.of(
+        java.util.List.of(Order.builder().id(1L).build()), 0, 10, 1
+    );
+    when(orderRepositoryPort.findWithFilters(1L, "PAID", 0, 10, "id", "asc")).thenReturn(mockPage);
+
+    com.ecommerce.domain.model.PageResult<Order> result = orderApplicationService.findWithFilters(
+        1L, "PAID", 0, 10, "id", "asc"
+    );
+
+    assertEquals(1, result.totalElements());
+    assertEquals(1, result.content().size());
+    verify(orderRepositoryPort).findWithFilters(1L, "PAID", 0, 10, "id", "asc");
+  }
 }
 

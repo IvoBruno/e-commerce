@@ -2,8 +2,10 @@ package com.ecommerce.infrastructure.adapters.input.rest.controller;
 
 import com.ecommerce.application.ports.input.PaymentUseCase;
 import com.ecommerce.infrastructure.adapters.input.rest.dto.PaymentDTO;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +36,16 @@ public class PaymentController {
   }
 
   @PostMapping
-  public ResponseEntity<PaymentDTO> save(@RequestBody PaymentDTO paymentDTO) {
+  public ResponseEntity<PaymentDTO> save(@Valid @RequestBody PaymentDTO paymentDTO) {
     PaymentDTO saved = PaymentDTO.fromDomain(paymentUseCase.save(paymentDTO.toDomain()));
-    return ResponseEntity.ok(saved);
+    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<PaymentDTO> update(@PathVariable Long id, @RequestBody PaymentDTO paymentDTO) {
+  public ResponseEntity<PaymentDTO> update(
+      @PathVariable Long id,
+      @Valid @RequestBody PaymentDTO paymentDTO
+  ) {
     PaymentDTO updated = PaymentDTO.fromDomain(paymentUseCase.update(id, paymentDTO.toDomain()));
     return ResponseEntity.ok(updated);
   }
@@ -51,4 +56,3 @@ public class PaymentController {
     return ResponseEntity.noContent().build();
   }
 }
-

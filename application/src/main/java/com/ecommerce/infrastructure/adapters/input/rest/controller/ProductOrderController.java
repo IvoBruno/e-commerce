@@ -2,8 +2,10 @@ package com.ecommerce.infrastructure.adapters.input.rest.controller;
 
 import com.ecommerce.application.ports.input.ProductOrderUseCase;
 import com.ecommerce.infrastructure.adapters.input.rest.dto.ProductOrderDTO;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +36,16 @@ public class ProductOrderController {
   }
 
   @PostMapping
-  public ResponseEntity<ProductOrderDTO> save(@RequestBody ProductOrderDTO productOrderDTO) {
+  public ResponseEntity<ProductOrderDTO> save(@Valid @RequestBody ProductOrderDTO productOrderDTO) {
     ProductOrderDTO saved = ProductOrderDTO.fromDomain(productOrderUseCase.save(productOrderDTO.toDomain()));
-    return ResponseEntity.ok(saved);
+    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ProductOrderDTO> update(@PathVariable Long id, @RequestBody ProductOrderDTO productOrderDTO) {
+  public ResponseEntity<ProductOrderDTO> update(
+      @PathVariable Long id,
+      @Valid @RequestBody ProductOrderDTO productOrderDTO
+  ) {
     ProductOrderDTO updated = ProductOrderDTO.fromDomain(productOrderUseCase.update(id, productOrderDTO.toDomain()));
     return ResponseEntity.ok(updated);
   }
@@ -51,4 +56,3 @@ public class ProductOrderController {
     return ResponseEntity.noContent().build();
   }
 }
-

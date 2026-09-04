@@ -4,6 +4,7 @@ import com.ecommerce.application.ports.input.CategoryUseCase;
 import com.ecommerce.application.ports.output.CategoryRepositoryPort;
 import com.ecommerce.domain.exception.ResourceNotFoundException;
 import com.ecommerce.domain.model.Category;
+import com.ecommerce.domain.model.PageResult;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,18 @@ public class CategoryApplicationService implements CategoryUseCase {
   @Transactional(readOnly = true)
   public List<Category> findAll() {
     return categoryRepositoryPort.findAll();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageResult<Category> findWithFilters(
+      String search,
+      int page,
+      int size,
+      String sortBy,
+      String sortDirection
+  ) {
+    return categoryRepositoryPort.findWithFilters(search, page, size, sortBy, sortDirection);
   }
 
   @Override
@@ -49,4 +62,3 @@ public class CategoryApplicationService implements CategoryUseCase {
     categoryRepositoryPort.deleteById(id);
   }
 }
-

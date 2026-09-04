@@ -1,9 +1,11 @@
 package com.ecommerce.infrastructure.adapters.input.rest.controller;
 
 import com.ecommerce.application.ports.input.UserUseCase;
+import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.infrastructure.adapters.input.rest.dto.UserDTO;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,11 +24,16 @@ public class UserController {
   private final UserUseCase userUseCase;
 
   @GetMapping
-  public ResponseEntity<List<UserDTO>> findAll() {
-    List<UserDTO> list = userUseCase.findAll().stream()
-        .map(UserDTO::fromDomain)
-        .toList();
-    return ResponseEntity.ok(list);
+  public ResponseEntity<PageResult<UserDTO>> findAll(
+      @RequestParam(required = false) String search,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection
+  ) {
+    PageResult<UserDTO> result = userUseCase.findWithFilters(search, page, size, sortBy, sortDirection)
+        .map(UserDTO::fromDomain);
+    return ResponseEntity.ok(result);
   }
 
   @GetMapping("/{id}")
@@ -34,13 +42,16 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserDTO> save(@RequestBody UserDTO userDTO) {
+  public ResponseEntity<UserDTO> save(@Valid @RequestBody UserDTO userDTO) {
     UserDTO saved = UserDTO.fromDomain(userUseCase.save(userDTO.toDomain()));
-    return ResponseEntity.ok(saved);
+    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+  public ResponseEntity<UserDTO> update(
+      @PathVariable Long id,
+      @Valid @RequestBody UserDTO userDTO
+  ) {
     UserDTO updated = UserDTO.fromDomain(userUseCase.update(id, userDTO.toDomain()));
     return ResponseEntity.ok(updated);
   }
@@ -51,4 +62,3 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 }
-

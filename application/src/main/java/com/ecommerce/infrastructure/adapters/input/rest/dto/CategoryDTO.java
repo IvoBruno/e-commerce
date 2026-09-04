@@ -1,10 +1,14 @@
 package com.ecommerce.infrastructure.adapters.input.rest.dto;
 
 import com.ecommerce.domain.model.Category;
+import jakarta.validation.constraints.NotBlank;
 
 public record CategoryDTO(
     Long id,
+
+    @NotBlank(message = "Category name is required")
     String name,
+
     String description
 ) {
   public static CategoryDTO fromDomain(Category category) {
@@ -22,4 +26,3 @@ public record CategoryDTO(
         .build();
   }
 }
-

@@ -1,14 +1,24 @@
 package com.ecommerce.infrastructure.adapters.input.rest.dto;
 
 import com.ecommerce.domain.model.Payment;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record PaymentDTO(
     Long id,
+
+    @NotBlank(message = "Payment method is required")
     String paymentMethod,
+
+    @NotNull(message = "Payment amount is required")
+    @Positive(message = "Payment amount must be greater than zero")
     BigDecimal amount,
+
     String status,
+
     LocalDateTime createdAt
 ) {
   public static PaymentDTO fromDomain(Payment payment) {
@@ -34,4 +44,3 @@ public record PaymentDTO(
         .build();
   }
 }
-

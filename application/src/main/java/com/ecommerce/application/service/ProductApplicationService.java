@@ -4,7 +4,9 @@ import com.ecommerce.application.ports.input.ProductUseCase;
 import com.ecommerce.application.ports.output.CategoryRepositoryPort;
 import com.ecommerce.application.ports.output.ProductRepositoryPort;
 import com.ecommerce.domain.exception.ResourceNotFoundException;
+import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.domain.model.Product;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,21 @@ public class ProductApplicationService implements ProductUseCase {
   @Transactional(readOnly = true)
   public List<Product> findAll() {
     return productRepositoryPort.findAll();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageResult<Product> findWithFilters(
+      Long categoryId,
+      BigDecimal minPrice,
+      BigDecimal maxPrice,
+      String search,
+      int page,
+      int size,
+      String sortBy,
+      String sortDirection
+  ) {
+    return productRepositoryPort.findWithFilters(categoryId, minPrice, maxPrice, search, page, size, sortBy, sortDirection);
   }
 
   @Override
@@ -64,4 +81,3 @@ public class ProductApplicationService implements ProductUseCase {
     productRepositoryPort.deleteById(id);
   }
 }
-

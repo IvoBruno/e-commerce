@@ -1,2 +1,7 @@
 *.sql
 HEXAGONAL-ARCHITECTURE-ANALYSIS.md
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local

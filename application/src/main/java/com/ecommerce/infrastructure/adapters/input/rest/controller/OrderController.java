@@ -1,9 +1,11 @@
 package com.ecommerce.infrastructure.adapters.input.rest.controller;
 
 import com.ecommerce.application.ports.input.OrderUseCase;
+import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.infrastructure.adapters.input.rest.dto.OrderDTO;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,11 +24,17 @@ public class OrderController {
   private final OrderUseCase orderUseCase;
 
   @GetMapping
-  public ResponseEntity<List<OrderDTO>> findAll() {
-    List<OrderDTO> list = orderUseCase.findAll().stream()
-        .map(OrderDTO::fromDomain)
-        .toList();
-    return ResponseEntity.ok(list);
+  public ResponseEntity<PageResult<OrderDTO>> findAll(
+      @RequestParam(required = false) Long userId,
+      @RequestParam(required = false) String status,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection
+  ) {
+    PageResult<OrderDTO> result = orderUseCase.findWithFilters(userId, status, page, size, sortBy, sortDirection)
+        .map(OrderDTO::fromDomain);
+    return ResponseEntity.ok(result);
   }
 
   @GetMapping("/{id}")
@@ -34,13 +43,16 @@ public class OrderController {
   }
 
   @PostMapping
-  public ResponseEntity<OrderDTO> create(@RequestBody OrderDTO orderDTO) {
+  public ResponseEntity<OrderDTO> create(@Valid @RequestBody OrderDTO orderDTO) {
     OrderDTO created = OrderDTO.fromDomain(orderUseCase.create(orderDTO.toDomain()));
-    return ResponseEntity.ok(created);
+    return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+  public ResponseEntity<OrderDTO> update(
+      @PathVariable Long id,
+      @Valid @RequestBody OrderDTO orderDTO
+  ) {
     OrderDTO updated = OrderDTO.fromDomain(orderUseCase.update(id, orderDTO.toDomain()));
     return ResponseEntity.ok(updated);
   }
@@ -51,4 +63,3 @@ public class OrderController {
     return ResponseEntity.noContent().build();
   }
 }
-

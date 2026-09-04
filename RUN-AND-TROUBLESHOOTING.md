@@ -58,18 +58,43 @@ psql -U postgres -d ecommerce_db -f 01_create_database.sql
 psql -U postgres -d ecommerce_db -f 02_functions_triggers_views.sql
 ```
 
-#### Step 3: Configure Database Credentials
+#### Step 3: Configure Database Credentials & Secrets
 
-Credentials default to `postgres / postgres`. To override them without changing source code, export environment variables:
+Passwords and credentials are kept in a `.env` file at the project root (ignored by Git):
 
-```bash
-export DB_USERNAME=postgres
-export DB_PASSWORD=your_password
-```
+1. Copy the example file:
+   ```bash
+   cp .env.example .env
+   ```
+2. Edit `.env` to set your desired passwords:
+   ```properties
+   POSTGRES_DB=ecommerce_db
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=your_secure_password
+   HOST_DB_PORT=5433
+   DB_USERNAME=postgres
+   DB_PASSWORD=your_secure_password
+   ```
 
 ---
 
 ### 3. Running the Application
+
+#### Option A: Running with Docker Compose (Recommended)
+
+Runs both the Spring Boot API and PostgreSQL database in containers with automated database initialization:
+
+```bash
+docker compose up --build -d
+```
+
+- **API Base URL**: `http://localhost:8080`
+- **PostgreSQL Host Port**: `localhost:5433` (mapped to container port `5432` to avoid conflict with native host PostgreSQL)
+- **View Logs**: `docker compose logs -f api`
+- **Stop Containers**: `docker compose down`
+- **Reset Database**: `docker compose down -v`
+
+#### Option B: Running Locally with Maven
 
 Always run commands from the `application/` directory:
 
@@ -315,18 +340,43 @@ psql -U postgres -d ecommerce_db -f 01_create_database.sql
 psql -U postgres -d ecommerce_db -f 02_functions_triggers_views.sql
 ```
 
-#### Passo 3: Configurar Credenciais de Acesso
+#### Passo 3: Configurar Credenciais e Senhas de Acesso
 
-O padrão definido é `postgres / postgres`. Para alterar via terminal sem modificar código:
+As senhas e configurações de banco de dados ficam armazenadas em um arquivo `.env` na raiz do projeto (ignorado pelo Git):
 
-```bash
-export DB_USERNAME=postgres
-export DB_PASSWORD=sua_senha
-```
+1. Copie o arquivo de exemplo:
+   ```bash
+   cp .env.example .env
+   ```
+2. Edite o `.env` para definir suas senhas seguras:
+   ```properties
+   POSTGRES_DB=ecommerce_db
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=sua_senha_segura
+   HOST_DB_PORT=5433
+   DB_USERNAME=postgres
+   DB_PASSWORD=sua_senha_segura
+   ```
 
 ---
 
 ### 3. Executando a Aplicação
+
+#### Opção A: Executando via Docker Compose (Recomendado)
+
+Inicia a API Spring Boot e o banco PostgreSQL em containers com inicialização automática dos esquemas SQL:
+
+```bash
+docker compose up --build -d
+```
+
+- **URL Base da API**: `http://localhost:8080`
+- **Porta do PostgreSQL no Host**: `localhost:5433` (mapeada para a porta interna `5432` do container para evitar conflito com instâncias nativas do PostgreSQL na máquina)
+- **Visualizar Logs**: `docker compose logs -f api`
+- **Parar Containers**: `docker compose down`
+- **Resetar Banco de Dados**: `docker compose down -v`
+
+#### Opção B: Executando Localmente com Maven
 
 Sempre execute os comandos a partir da pasta `application/`:
 

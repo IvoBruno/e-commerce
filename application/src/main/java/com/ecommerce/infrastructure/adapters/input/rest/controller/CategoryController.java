@@ -1,8 +1,9 @@
 package com.ecommerce.infrastructure.adapters.input.rest.controller;
 
 import com.ecommerce.application.ports.input.CategoryUseCase;
+import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.infrastructure.adapters.input.rest.dto.CategoryDTO;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,11 +24,16 @@ public class CategoryController {
   private final CategoryUseCase categoryUseCase;
 
   @GetMapping
-  public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-    List<CategoryDTO> list = categoryUseCase.findAll().stream()
-        .map(CategoryDTO::fromDomain)
-        .toList();
-    return ResponseEntity.ok(list);
+  public ResponseEntity<PageResult<CategoryDTO>> getAllCategories(
+      @RequestParam(required = false) String search,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection
+  ) {
+    PageResult<CategoryDTO> result = categoryUseCase.findWithFilters(search, page, size, sortBy, sortDirection)
+        .map(CategoryDTO::fromDomain);
+    return ResponseEntity.ok(result);
   }
 
   @GetMapping("/{id}")
@@ -35,13 +42,16 @@ public class CategoryController {
   }
 
   @PostMapping
-  public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+  public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
     CategoryDTO created = CategoryDTO.fromDomain(categoryUseCase.create(categoryDTO.toDomain()));
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+  public ResponseEntity<CategoryDTO> updateCategory(
+      @PathVariable Long id,
+      @Valid @RequestBody CategoryDTO categoryDTO
+  ) {
     CategoryDTO updated = CategoryDTO.fromDomain(categoryUseCase.update(id, categoryDTO.toDomain()));
     return ResponseEntity.ok(updated);
   }
@@ -52,4 +62,3 @@ public class CategoryController {
     return ResponseEntity.noContent().build();
   }
 }
-

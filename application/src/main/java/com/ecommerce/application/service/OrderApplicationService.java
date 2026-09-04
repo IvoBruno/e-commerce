@@ -6,6 +6,7 @@ import com.ecommerce.application.ports.output.PaymentRepositoryPort;
 import com.ecommerce.application.ports.output.UserRepositoryPort;
 import com.ecommerce.domain.exception.ResourceNotFoundException;
 import com.ecommerce.domain.model.Order;
+import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.domain.valueobjects.OrderStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +27,19 @@ public class OrderApplicationService implements OrderUseCase {
   @Transactional(readOnly = true)
   public List<Order> findAll() {
     return orderRepositoryPort.findAll();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageResult<Order> findWithFilters(
+      Long userId,
+      String status,
+      int page,
+      int size,
+      String sortBy,
+      String sortDirection
+  ) {
+    return orderRepositoryPort.findWithFilters(userId, status, page, size, sortBy, sortDirection);
   }
 
   @Override
@@ -75,4 +89,3 @@ public class OrderApplicationService implements OrderUseCase {
     orderRepositoryPort.deleteById(id);
   }
 }
-

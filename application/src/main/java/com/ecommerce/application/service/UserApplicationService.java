@@ -3,6 +3,7 @@ package com.ecommerce.application.service;
 import com.ecommerce.application.ports.input.UserUseCase;
 import com.ecommerce.application.ports.output.UserRepositoryPort;
 import com.ecommerce.domain.exception.ResourceNotFoundException;
+import com.ecommerce.domain.model.PageResult;
 import com.ecommerce.domain.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,18 @@ public class UserApplicationService implements UserUseCase {
   @Transactional(readOnly = true)
   public List<User> findAll() {
     return userRepositoryPort.findAll();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageResult<User> findWithFilters(
+      String search,
+      int page,
+      int size,
+      String sortBy,
+      String sortDirection
+  ) {
+    return userRepositoryPort.findWithFilters(search, page, size, sortBy, sortDirection);
   }
 
   @Override
@@ -55,4 +68,3 @@ public class UserApplicationService implements UserUseCase {
     userRepositoryPort.deleteById(id);
   }
 }
-
